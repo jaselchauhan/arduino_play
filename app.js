@@ -27,13 +27,12 @@
 // });
 
 
-
-
 var five = require("johnny-five")
 var board = new five.Board();
 //cant set the button and led until the board is ready so keep as null here but define globally.
 var button = null;
 var led = null;
+var buttonCounter = null;
 
 var Firebase = require("firebase");
 
@@ -49,19 +48,31 @@ board.on("ready", function() {
   button.on("down", function() {
     console.log("down");
     led.on();
-    myFirebaseRef.set("down");
+    buttonCounter ++;
+    myFirebaseRef.set({
+      name: "testing name",
+      location: "test location",
+      buttonCount: buttonCounter,
+      buttonStatus: "down" }
+    );
   });
 
   // when button is released
   button.on("up", function() {
     console.log("up");
     led.off();
-    myFirebaseRef.set("up");
+    //myFirebaseRef.set("up");
+    myFirebaseRef.set({
+      name: "testing name",
+      location: "test location",
+      buttonCount: buttonCounter,
+      buttonStatus: "up"
+    });
   });
 
   myFirebaseRef.on("value", function(snapshot) {
   var buttonState = snapshot.val();
-    if(buttonState == "down"){
+    if(buttonState.buttonStatus == "down"){
       led.on();
     } else {
       led.off();
