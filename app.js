@@ -1,12 +1,9 @@
-
+/*
 //hello world app for arduino using johnny-five and node.js
 // var five = require('johnny-five');
 // var board = new five.Board();
 // var led = null
 // var toggleState = false
-
-
-
 
 
 // board.on('ready', function(){
@@ -30,36 +27,46 @@
 //
 // });
 
+*/
 
+//setup variables
+var five = require("johnny-five")
+var board = new five.Board();
+var button = new five.Button(2);
+var led = new five.Led(12);
+var Firebase = require("firebase");
+var myFirebaseRef = new Firebase("https://fireplay.firebaseio-demo.com/button");
 
-
-var five = require("johnny-five"),
-  board, button;
-
-board = new five.Board();
-
+//event listener for when arduino is ready
 board.on("ready", function() {
 
-  // Create a new `button` hardware instance.
-  // This example allows the button module to
-  // create a completely default instance
-  button = new five.Button(2);
-  var led = new five.Led(12);
 
-
-  // Button Event API
-
-  // "down" the button is pressed
+  // when button is pressed
   button.on("down", function() {
     console.log("down");
     led.on();
+    myFirebaseRef.set("down");
   });
 
-  // "up" the button is released
+  // when button is released
   button.on("up", function() {
     console.log("up");
     led.off();
+    myFirebaseRef.set("up");
   });
+
+  // setup firebase to read so you can control button from net
+  myFirebaseRef.on("value", function(snapshot) {
+  var buttonState = snapshot.val();
+
+  if(buttonState == "down"){
+    led.on();
+  } else {
+    led.off();
+  }
+
+});
+
 });
 
 console.log("\nWaiting for device to connect....");

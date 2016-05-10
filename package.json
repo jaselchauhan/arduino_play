@@ -9,6 +9,7 @@
   "author": "jasel chauhan",
   "license": "ISC",
   "dependencies": {
+    "firebase": "^2.4.2",
     "johnny-five": "^0.9.49"
   }
 }
