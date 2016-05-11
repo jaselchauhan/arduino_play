@@ -39,7 +39,7 @@ var Firebase = require("firebase");
 board.on("ready", function() {
 
   button = new five.Button(2);
-  led = new five.Led(12);
+  led = new five.Led(13);
 
   //setup a new firebase
   var myFirebaseRef = new Firebase("https://fireplay.firebaseio-demo.com/button");
